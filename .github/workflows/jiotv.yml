@@ -1,0 +1,37 @@
+name: Update jiotv.m3u
+
+on:
+  workflow_dispatch:  # <-- This enables manual triggering
+  schedule:
+    - cron: '0 */5 * * *' # Runs every 5 hours (Tokens expire regularly)
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Fetch file from hosting
+      env:
+        FILE_URL: ${{ secrets.JTV_FILE_URL }}
+      run: |
+        # Download the file, following redirects and saving as jiotv.m3u
+        curl -L -o jiotv.m3u "$FILE_URL"
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Add the file to the staging area
+        git add jiotv.m3u
+        
+        # Only commit and push if there are actual changes to prevents cluttering history
+        if git diff --cached --quiet; then
+          echo "No changes in jiotv.m3u, skipping commit."
+        else
+          git commit -m "Automated update of jiotv.m3u"
+          git push origin HEAD:main
+        fi
