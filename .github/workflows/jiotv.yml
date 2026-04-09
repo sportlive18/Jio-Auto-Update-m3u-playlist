@@ -1,4 +1,4 @@
-name: Update jiotv.m3u
+name: Update jtv.m3u
 
 on:
   workflow_dispatch:  # <-- This enables manual triggering
@@ -18,7 +18,7 @@ jobs:
         FILE_URL: ${{ secrets.JTV_FILE_URL }}
       run: |
         # Download the file, following redirects and saving as jiotv.m3u
-        curl -L -o jiotv.m3u "$FILE_URL"
+        curl -L -o jtv.m3u "$FILE_URL"
 
     - name: Commit and push changes
       run: |
