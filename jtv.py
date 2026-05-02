@@ -120,7 +120,7 @@ if __name__ == "__main__":
     # Use absolute paths relative to the script directory
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     
-    JIO_URL = "https://raw.githubusercontent.com/Anasvirat18/Jio_/refs/heads/main/stream.json"
+    JIO_URL = "https://jo-json.vodep39240327.workers.dev/"
     META_FILENAME = os.path.join(BASE_DIR, "meta.txt")
     # Output file will also be in the same folder
     OUTPUT_FILENAME = os.path.join(BASE_DIR, "jiotv.m3u")
