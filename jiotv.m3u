@@ -90,6 +90,13 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/ABP_News_India_BTS/WDVLive/index.mpd|cook
 #KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=180
 https://jiotvpllive.cdn.jio.com/bpk-tv/Asianet_News_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290213~exp=1778311813~acl=/bpk-tv/Asianet_News_BTS/WDVLive/*~hmac=e9b2fa5623d899990682e34eefa2ef5db619e1caef0225e5645a77a679aeff2e
 
+#EXTINF:-1 tvg-id="185" tvg-logo="" group-title="Unknown",AndPicturesHD BTS
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=185
+https://jiotvpllive.cdn.jio.com/bpk-tv/AndPicturesHD_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/AndPicturesHD_BTS/WDVLive/*~hmac=f2ac6920f49506daea525db4c76fb676d93ef8fecbcf681612104587f789df15
+
 #EXTINF:-1 tvg-id="190" tvg-logo="" group-title="Unknown",CNBCAwaaz BTS
 #KODIPROP:inputstream=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
@@ -481,6 +488,13 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/Arihant_TV_BTS/WDVLive/index.mpd|cookie=_
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=471
 https://jiotvpllive.cdn.jio.com/bpk-tv/SonySAB_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/SonySAB_BTS/WDVLive/*~hmac=f01daf39e0eabf79fbb04e0d40d8c47db89ebc8bdf3761d748c02e883283a887
+
+#EXTINF:-1 tvg-id="472" tvg-logo="" group-title="Unknown",AndTVHD BTS
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=472
+https://jiotvpllive.cdn.jio.com/bpk-tv/AndTVHD_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/AndTVHD_BTS/WDVLive/*~hmac=b308ce1dc8d97790e18e4dda09d6462f2e910ea7c58364b6ee2cf3540de3351f
 
 #EXTINF:-1 tvg-id="473" tvg-logo="" group-title="Unknown",ZeeAnmol BTS
 #KODIPROP:inputstream=inputstream.adaptive
@@ -3310,6 +3324,13 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/B4U_Bhojpuri_BTS/WDVLive/index.mpd|cookie
 #KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1319
 https://jiotvpllive.cdn.jio.com/bpk-tv/ZeeCafeHD_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/ZeeCafeHD_BTS/WDVLive/*~hmac=7f8ba909775c8e458119908dbb522b297bbd9b1254005bcfd7a4899165dd4f3b
 
+#EXTINF:-1 tvg-id="1322" tvg-logo="" group-title="Unknown",AndFlixHD BTS
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1322
+https://jiotvpllive.cdn.jio.com/bpk-tv/AndFlixHD_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/AndFlixHD_BTS/WDVLive/*~hmac=f5e81dec0b972b398e148060b0bb6fe4a680de47e8af9dec430021b4b4fa06b2
+
 #EXTINF:-1 tvg-id="1324" tvg-logo="" group-title="Unknown",Colors Gujarati Cinema BTS
 #KODIPROP:inputstream=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
@@ -3919,6 +3940,13 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/Safari_TV_BTS/WDVLive/index.mpd|cookie=__
 #KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1667
 https://jiotvpllive.cdn.jio.com/bpk-tv/Rongeen_TV_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290215~exp=1778311815~acl=/bpk-tv/Rongeen_TV_BTS/WDVLive/*~hmac=2308f629149154ae317b2a9222a6c0ec59f6257990b2a92200baa81444049e4a
 
+#EXTINF:-1 tvg-id="1668" tvg-logo="" group-title="Unknown",AndXploreHD BTS
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1668
+https://jiotvpllive.cdn.jio.com/bpk-tv/AndXploreHD_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/AndXploreHD_BTS/WDVLive/*~hmac=26783ed70a21e94ddbc38ae55d20f4ffe8ed78e763a627889541bab7ee1cea64
+
 #EXTINF:-1 tvg-id="1670" tvg-logo="" group-title="Unknown",C News Bharat BTS
 #KODIPROP:inputstream=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
@@ -4114,6 +4142,13 @@ https://jiotvpllive.cdn.jio.com/bpk-tv/NEWS_24_MPCG_BTS/WDVLive/index.mpd|cookie
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1834
 https://jiotvpllive.cdn.jio.com/bpk-tv/Green_Chillies_TV_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/Green_Chillies_TV_BTS/WDVLive/*~hmac=bef166fc0fbca269462338a629b851d96db358965a5c6d7562c849ca13cb4dc6
+
+#EXTINF:-1 tvg-id="1839" tvg-logo="" group-title="Unknown",AndPictures BTS
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=https://temp.webplay.fun/jtv/key.php?id=1839
+https://jiotvpllive.cdn.jio.com/bpk-tv/AndPictures_BTS/WDVLive/index.mpd|cookie=__hdnea__=st=1778290212~exp=1778311812~acl=/bpk-tv/AndPictures_BTS/WDVLive/*~hmac=6589fd026b2241d35ddff3ff36c840c0340ba6e62bc200bce0a4be1492d56439
 
 #EXTINF:-1 tvg-id="1853" tvg-logo="" group-title="Unknown",News11 Bharat BTS
 #KODIPROP:inputstream=inputstream.adaptive
