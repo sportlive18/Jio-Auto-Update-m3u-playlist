@@ -62,6 +62,9 @@ def parse_m3u_to_json(m3u_url):
                         # Convert to datetime
                         exp_datetime = datetime.fromtimestamp(exp_timestamp)
                         current_entry['cookie_expires'] = exp_datetime.strftime('%d/%m/%Y %I:%M:%S %p IST')
+                else:
+                    current_entry['cookie'] = ''
+                    current_entry['cookie_expires'] = ''
             else:
                 stream_url = line
                 current_entry['cookie'] = ''
@@ -88,7 +91,7 @@ def parse_m3u_to_json(m3u_url):
             
     return result
 
-def save_to_json(data, output_file='channels.json'):
+def save_to_json(data, output_file='jtv.json'):
     """
     Save the parsed data to a JSON file
     """
@@ -110,8 +113,11 @@ def main():
         for i, channel in enumerate(channels[:3], 1):
             print(f"{i}. {channel['name']} - {channel['stream_url']}")
             
-        # Save to JSON file
-        save_to_json(channels)
+        # Save to JSON file as jtv.json
+        save_to_json(channels, 'jtv.json')
+        
+        # Also display the total count and file location
+        print(f"\n✅ Successfully saved {len(channels)} channels to jtv.json")
         
     except requests.exceptions.RequestException as e:
         print(f"Error fetching M3U file: {e}")
