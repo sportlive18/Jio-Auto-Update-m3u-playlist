@@ -1,128 +1,147 @@
-import re
+#!/usr/bin/env python3
+"""
+Convert a JioTV-style .m3u playlist (with #KODIPROP clearkey lines and a
+Cookie query param appended to the stream URL) into a JSON file.
+
+Usage:
+    python3 m3u_to_json.py [source] [-o output.json]
+
+    source can be:
+        - a local file path to the .m3u file, or
+        - an http(s) URL (it will be downloaded first)
+
+    If source is omitted, it defaults to the raw GitHub URL used below.
+
+Each entry in the output JSON looks like:
+{
+    "id": "143",
+    "name": "CNBC TV18 Prime",
+    "stream_url": "https://jiotvmblive.cdn.jio.com/bpk-tv/CNBCTV18Prime_MOB/WDVLive/index.mpd",
+    "cookie": "__hdnea__=st=1784384983~exp=1784406583~acl=/*~hmac=...",
+    "cookie_expires": "19/7/2026 6:00:27 AM IST",
+    "key_id": "eb19113c11ce5cfb80c89696765a0187",
+    "key": "b2797ce5e403ee22d8e36c6d5f2b6630"
+}
+"""
+
+import argparse
 import json
-from datetime import datetime
-import requests
+import re
+import sys
+import urllib.request
+from datetime import datetime, timedelta, timezone
 
-def parse_m3u_to_json(m3u_url):
-    """
-    Parse M3U playlist from URL and convert to JSON format
-    """
-    # Fetch the M3U content
-    response = requests.get(m3u_url)
-    response.raise_for_status()
-    content = response.text
-    
-    lines = content.strip().split('\n')
-    
-    result = []
-    current_entry = {}
-    
-    for line in lines:
-        line = line.strip()
-        
-        if line.startswith('#EXTINF'):
-            # Extract channel name from EXTINF line
-            # Format: #EXTINF:-1 tvg-id="143" tvg-logo="..." group-title="English",CNBC TV18 Prime
-            match = re.search(r',([^,]+)$', line)
-            if match:
-                channel_name = match.group(1).strip()
-                current_entry['name'] = channel_name
-            
-            # Extract tvg-id if available
-            tvg_id_match = re.search(r'tvg-id="([^"]+)"', line)
-            if tvg_id_match:
-                current_entry['id'] = tvg_id_match.group(1)
-            else:
-                current_entry['id'] = ''
-                
-        elif line.startswith('#KODIPROP:inputstream.adaptive.license_key'):
-            # Extract license key
-            # Format: #KODIPROP:inputstream.adaptive.license_key=key_id:key
-            match = re.search(r'license_key=([^:]+):([^:]+)', line)
-            if match:
-                current_entry['key_id'] = match.group(1)
-                current_entry['key'] = match.group(2)
-                
-        elif line.startswith('http') or line.startswith('https'):
-            # Extract stream URL and cookie
-            if '|' in line:
-                url_parts = line.split('|')
-                stream_url = url_parts[0]
-                cookie_part = url_parts[1] if len(url_parts) > 1 else ''
-                
-                # Extract cookie
-                cookie_match = re.search(r'Cookie=([^|]+)', cookie_part)
-                if cookie_match:
-                    current_entry['cookie'] = cookie_match.group(1)
-                    
-                    # Extract expiry timestamp from cookie
-                    exp_match = re.search(r'exp=(\d+)', current_entry['cookie'])
-                    if exp_match:
-                        exp_timestamp = int(exp_match.group(1))
-                        # Convert to datetime
-                        exp_datetime = datetime.fromtimestamp(exp_timestamp)
-                        current_entry['cookie_expires'] = exp_datetime.strftime('%d/%m/%Y %I:%M:%S %p IST')
-                else:
-                    current_entry['cookie'] = ''
-                    current_entry['cookie_expires'] = ''
-            else:
-                stream_url = line
-                current_entry['cookie'] = ''
-                current_entry['cookie_expires'] = ''
-            
-            current_entry['stream_url'] = stream_url
-            
-            # If we have a complete entry, add to result
-            if current_entry and 'name' in current_entry and 'stream_url' in current_entry:
-                # Ensure all fields exist
-                entry = {
-                    'id': current_entry.get('id', ''),
-                    'name': current_entry.get('name', ''),
-                    'stream_url': current_entry.get('stream_url', ''),
-                    'cookie': current_entry.get('cookie', ''),
-                    'cookie_expires': current_entry.get('cookie_expires', ''),
-                    'key_id': current_entry.get('key_id', ''),
-                    'key': current_entry.get('key', '')
-                }
-                result.append(entry)
-                
-            # Reset for next entry
-            current_entry = {}
-            
-    return result
+DEFAULT_SOURCE = "https://raw.githubusercontent.com/sixpg/zeyo/refs/heads/main/jtv.m3u"
+IST = timezone(timedelta(hours=5, minutes=30))
 
-def save_to_json(data, output_file='jtv.json'):
-    """
-    Save the parsed data to a JSON file
-    """
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"JSON file saved as: {output_file}")
-    print(f"Total channels parsed: {len(data)}")
+
+def fetch_source(source: str) -> str:
+    """Return the raw text of the m3u playlist, whether source is a URL or a local path."""
+    if source.startswith("http://") or source.startswith("https://"):
+        req = urllib.request.Request(source, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    with open(source, "r", encoding="utf-8", errors="replace") as f:
+        return f.read()
+
+
+def format_expiry(exp_ts: str) -> str:
+    """Convert a unix timestamp string to a 'D/M/YYYY H:MM:SS AM/PM IST' string."""
+    try:
+        dt = datetime.fromtimestamp(int(exp_ts), tz=IST)
+    except (ValueError, OSError):
+        return ""
+    hour12 = dt.hour % 12
+    if hour12 == 0:
+        hour12 = 12
+    ampm = "AM" if dt.hour < 12 else "PM"
+    return f"{dt.day}/{dt.month}/{dt.year} {hour12}:{dt.minute:02d}:{dt.second:02d} {ampm} IST"
+
+
+def parse_m3u(text: str):
+    """Parse the m3u content and yield channel dicts."""
+    lines = [l.rstrip("\n") for l in text.split("\n")]
+
+    channels = []
+    current = None
+
+    for raw_line in lines:
+        line = raw_line.strip()
+        if not line:
+            continue
+
+        if line.startswith("#EXTINF"):
+            # Start a new channel entry
+            current = {}
+            tvg_id_match = re.search(r'tvg-id="([^"]*)"', line)
+            name_match = re.search(r",(.*)$", line)
+            current["id"] = tvg_id_match.group(1) if tvg_id_match else ""
+            current["name"] = name_match.group(1).strip() if name_match else ""
+            current["key_id"] = None
+            current["key"] = None
+
+        elif line.startswith("#KODIPROP:inputstream.adaptive.license_key="):
+            if current is not None:
+                key_val = line.split("=", 1)[1]
+                if ":" in key_val:
+                    key_id, key = key_val.split(":", 1)
+                    current["key_id"] = key_id
+                    current["key"] = key
+
+        elif line.startswith("#") :
+            # other metadata lines (KODIPROP license_type, EXTM3U, etc.) - ignore
+            continue
+
+        else:
+            # This should be the stream URL line, optionally with |Cookie=...
+            if current is None:
+                continue
+
+            if "|" in line:
+                url_part, cookie_part = line.split("|", 1)
+            else:
+                url_part, cookie_part = line, ""
+
+            stream_url = url_part.strip()
+            cookie = ""
+            if cookie_part:
+                # cookie_part looks like: Cookie=__hdnea__=st=...~exp=...~acl=...~hmac=...
+                cookie = cookie_part.strip()
+                if cookie.lower().startswith("cookie="):
+                    cookie = cookie.split("=", 1)[1]
+
+            current["stream_url"] = stream_url
+            current["cookie"] = cookie
+
+            # Extract expiry timestamp from the cookie string (exp=...)
+            exp_match = re.search(r"exp=(\d+)", cookie)
+            current["cookie_expires"] = format_expiry(exp_match.group(1)) if exp_match else ""
+
+            channels.append(current)
+            current = None
+
+    return channels
+
 
 def main():
-    # M3U URL
-    m3u_url = 'https://raw.githubusercontent.com/sixpg/zeyo/refs/heads/main/jtv.m3u'
-    
-    try:
-        # Parse M3U to JSON
-        channels = parse_m3u_to_json(m3u_url)
-        
-        # Display first few channels as preview
-        print("Preview of first 3 channels:")
-        for i, channel in enumerate(channels[:3], 1):
-            print(f"{i}. {channel['name']} - {channel['stream_url']}")
-            
-        # Save to JSON file as jtv.json
-        save_to_json(channels, 'jtv.json')
-        
-        # Also display the total count and file location
-        print(f"\n✅ Successfully saved {len(channels)} channels to jtv.json")
-        
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching M3U file: {e}")
-    except Exception as e:
-        print(f"Error parsing M3U file: {e}")
+    parser = argparse.ArgumentParser(description="Convert JioTV .m3u playlist to JSON")
+    parser.add_argument("source", nargs="?", default=DEFAULT_SOURCE,
+                         help="Path or URL to the .m3u file (default: the sixpg/zeyo jtv.m3u on GitHub)")
+    parser.add_argument("-o", "--output", default="jtv.json",
+                         help="Output JSON file path (default: jtv.json)")
+    args = parser.parse_args()
+
+    print(f"Fetching playlist from: {args.source}")
+    text = fetch_source(args.source)
+
+    channels = parse_m3u(text)
+    print(f"Parsed {len(channels)} channels.")
+
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(channels, f, indent=4, ensure_ascii=False)
+
+    print(f"Saved JSON to: {args.output}")
+
 
 if __name__ == "__main__":
     main()
